@@ -1,0 +1,96 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="pagetitle">
+  <h1>News list</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('web.admin_home')}}">Home</a></li>
+      <li class="breadcrumb-item active">News</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">All News</h5>
+
+          {% if me.role == 'manager' %}
+          <div class="text-center">
+            <a href="{{ url_for('web.add_news') }}">
+              <button type="submit" class="btn btn-primary">Add News</button>
+            </a>
+          </div>
+          {% endif %}
+
+          <br>
+
+
+          <div class="tab-content pt-2">
+            <form action="{{ url_for('web.admin_news') }}" method="GET" class="search-form">
+                <input class="search-form input" type="text" id="search" name="query" placeholder="Search by news' title, content, or status" size="50">
+                <button type="submit" class="btn">Search</button>
+            </form>
+          </div>
+
+
+
+          <br>
+          {{ pagination.info }}
+          {{ pagination.links }}
+          <!-- Table with stripped rows -->
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Authur</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Status</th>
+                <th>Created at</th>
+                <th>Published at</th>
+                <th>Updated at</th>
+                {% if me.role == 'manager' %}<th>Action</th>{% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for n in news %}
+              <tr>
+                <td>{{ loop.index + pagination.skip }}</td>
+                <td>{{ n.author_name }}</td>
+                <td>{{ n.title }}</td>
+                <td>{{ n.content }}</td>
+                <td>{{ n.status.capitalize() }}</td>
+                <td class="nz-date">{{ n.created_at }}</td>
+                <td class="nz-date">{{ n.published_at }}</td>
+                <td class="nz-date">{{ n.updated_at }}</td>
+                {% if me.role == 'manager' %}
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="{{url_for('web.update_news', id=n.id)}}" class="btn btn-primary">Edit</a>
+                    <a href="{{url_for('web.delete_news', id=n.id)}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this news?')">Delete</a>
+                  </div>
+                </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {{ pagination.links }}
+          <!-- End Table with stripped rows -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+{% endblock %}

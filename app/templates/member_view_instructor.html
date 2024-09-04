@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- ======= Breadcrumbs ======= -->
+<div class="breadcrumbs">
+  <div class="page-header d-flex align-items-center" style="background-image: url('');">
+    <div class="container position-relative">
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-6 text-center">
+          <h2>Instructor List</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <div class="container">
+      <ol>
+        <li><a href="{{ url_for('web.home') }}">Home</a></li>
+        <li>Instructor List</li>
+      </ol>
+    </div>
+  </nav>
+</div><!-- End Breadcrumbs -->
+
+<section id="blog" class="blog">
+  <div class="container" data-aos="fade-up">
+      <div class="row gy-4 posts-list">
+        {% for instructor in instructors %}
+          <div class="col-xl-4 col-md-6">
+              <article>
+                  <a href="{{ url_for('web.view_instructor_detail', user_id=instructor.id) }}">
+                      <div class="post-img">
+                          <img src="/{{ instructor.profile_image }}" alt="" class="img-fluid">
+                      </div>
+                      <p class="post-category">{{ instructor.position }}</p>
+                      <h2 class="title">
+                        {{ instructor.title }} {{ instructor.first_name }} {{ instructor.last_name }}
+                      </h2>
+
+                  </a>
+              </article>
+          </div><!-- End post list item -->
+        {% endfor %}
+      </div>
+  </div>
+</section>
+
+
+
+{% endblock %}

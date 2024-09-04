@@ -1,0 +1,71 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+<div class="pagetitle">
+  <h1>Feedback list</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('web.admin_home')}}">Home</a></li>
+      <li class="breadcrumb-item active">Feedback List</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">All Feedbacks</h5>
+          <br>
+
+          <div class="tab-content pt-2">
+            <form action="{{ url_for('web.admin_feedback') }}" method="GET" class="search-form">
+                <input class="search-form input" type="text" id="search" name="query" placeholder="Search by feedback's title, content, or published date" size="50">
+                <button type="submit" class="btn">Search</button>
+            </form>
+          </div>
+
+
+
+
+          <br>
+          {{ pagination.info }}
+          {{ pagination.links }}
+          <!-- Table with stripped rows -->
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>User</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Published Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for feedback in feedbacks %}
+              <tr>
+                <td>{{ loop.index + pagination.skip }}</td>
+                <td>{{feedback.feedback_user_id}}</td>
+                <td>{{feedback.title}}</td>
+                <td>{{feedback.content}}</td>
+                <td>{{feedback.published_at}}</td>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {{ pagination.links }}
+          <!-- End Table with stripped rows -->
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}

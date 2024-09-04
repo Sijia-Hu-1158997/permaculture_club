@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- ======= Breadcrumbs ======= -->
+<div class="breadcrumbs">
+  <div class="page-header d-flex align-items-center" style="background-image: url('');">
+    <div class="container position-relative">
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-6 text-center">
+          <h2>Instructor Course</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <div class="container">
+      <ol>
+        <li><a href="{{ url_for('web.home') }}">Home</a></li>
+        <li>Freetime</li>
+      </ol>
+    </div>
+  </nav>
+</div><!-- End Breadcrumbs -->
+
+<section class="sample-page">
+  <div class="container" data-aos="fade-up">
+    <div class="row">
+      <div class="col-xl-8">
+
+          <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">All Course List</h5>
+            
+            <div class="tab-content pt-2">
+              <!-- <form action="{{ url_for('web.admin_workshop') }}" method="GET" class="search-form">
+              </form> -->
+            </div>
+            <br>
+          {{ pagination.info }}
+          {{ pagination.links }}
+          <!-- Table with stripped rows -->
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Course Title</th>
+                <th>Course Type</th>
+                <th>Week Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Last Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for course in courses%}
+              <tr>
+                <td>{{ loop.index + pagination.skip }}</td>
+                <td>{{course.course_item.title}}</td>
+                <td>{{course.course_item.type}}</td>
+                <td>{{course.freetime_item.week_day}}</td>
+                <td>{{course.freetime_item.start_time}}</td>
+                <td>{{course.freetime_item.end_time}}</td>
+                <td>{{course.instructor_item.last_name}}</td>
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="{{url_for('web.admin_instructor_course_delete', instructor_course_id=course.id)}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this instructor course?')">Delete</a>
+                  </div>
+
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {{ pagination.links }}
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>   
+    </div>
+
+  </div>
+</section>
+
+
+{% endblock %}

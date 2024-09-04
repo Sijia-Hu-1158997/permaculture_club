@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Dashboard </title>
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png" />
+
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="/static/css/admin/style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+</head>
+
+<body>
+    <section class="position-fixed" style="z-index:10000; top: 64px; right: 0px">
+        <!--handle messages-->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible text-{{ category }}" role="alert">
+            <span class="text-sm">{{ message }}</span>
+            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </section>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="{{ url_for('web.admin_home') }}" class="logo d-flex align-items-center">
+                <span class="d-none d-lg-block" style="font-size: 20px;text-align: center">Permaculture Management
+                    System</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+
+
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+
+                <li class="nav-item dropdown">
+
+                    <!-- <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i> -->
+                        <!-- <span class="badge bg-primary badge-number">4</span> -->
+                    <!-- </a>End Notification Icon -->
+
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" id="remind">
+
+                        <!-- <li class="dropdown-header">
+                    You have 4 new notifications
+                    <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                    </li>
+                    <li> -->
+                        <hr class="dropdown-divider">
+                </li>
+
+            </ul><!-- End Notification Dropdown Items -->
+
+            </li><!-- End Notification Nav -->
+
+            <li class="nav-item dropdown pe-3">
+                {% if me.id %}
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    {% if me.profile_image %}
+                    <img src="/{{me.profile_image}}" alt="Profile" class="rounded-circle" width="40px" height="40px">
+                    {% else %}
+                    <img src="/static/img/avatar.png" alt="Profile" class="rounded-circle" width="40px" height="40px">
+                    {% endif %}
+                    <span class="d-none d-md-block dropdown-toggle ps-2">{{me.username}}</span>
+                </a><!-- End Profile Iamge Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>{{me.username}}</h6>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('web.home') }}">
+                            <i class="bi bi-grid"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('web.admin_profile') }}">
+                            <i class="bi bi-person"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                        {% if me.role == 'instructor' %}
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center"
+                                href="{{url_for('web.instructor_freetime')}}">
+                                <i class="bi bi-card-list"></i>
+                                <span>Manage Free Time</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center"
+                                href="{{url_for('web.instructor_course')}}">
+                                <i class="bi bi-menu-button-wide"></i>
+                                <span>Instructor Course</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center"
+                                href="{{url_for('web.booking_list')}}">
+                                <i class="bi bi-newspaper"></i>
+                                <span>See Courses & Record Attendance</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        {% endif %}
+
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{url_for('web.logout')}}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </li>
+
+                </ul><!-- End Profile Dropdown Items -->
+                {% endif %}
+            </li><!-- End Profile Nav -->
+
+            </ul>
+        </nav><!-- End Icons Navigation -->
+
+    </header><!-- End Header -->
+
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link " href="{{ url_for('web.admin_home') }}">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            {% if me.role == 'instructor' %}
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_profile')}}">
+                    <i class="bi bi-person"></i>
+                    <span>My Pofile & Password</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if me.role == 'manager' %}
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_users')}}">
+                    <i class="bi bi-person"></i>
+                    <span>Users</span>
+                </a>
+            </li>
+            {% endif %}
+
+
+            <li class="nav-item>">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_workshop') }}">
+                    <i class="bi bi-person"></i>
+                    <span>Workshops</span>
+                </a>
+            </li>
+
+
+
+
+            {% if me.role == 'manager' %}
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_instructor') }}">
+                    <i class="bi bi-person"></i>
+                    <span>Instructors</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_locations') }}">
+                    <i class="bi bi-file-earmark"></i>
+                    <span>Locations</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_categories') }}">
+                    <i class="bi bi-circle"></i>
+                    <span>Categories</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_lesson') }}">
+                    <i class="bi bi-question-circle"></i>
+                    <span>One-on-one Lessons</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_bookings') }}">
+                    <i class="bi bi-envelope"></i>
+                    <span>Booking</span>
+                </a>
+            </li>
+
+            {% if me.role == 'manager' %}
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_instructor_course') }}">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Instructor Course</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_subscriptions')}}">
+                    <i class="bi bi-menu-button-wide"></i><span>Subscriptions</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_payments')}}">
+                    <i class=" bi bi-journal-text"></i><span>Payments</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_attendance')}}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+
+            {% if me.role == 'manager' %}
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{url_for('web.admin_feedback')}}">
+                    <i class="bi bi-file-earmark"></i>
+                    <span>Feedback</span>
+                </a>
+            </li>
+
+            <!-- <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-register.html">
+                    <i class="bi bi-gem"></i>
+                    <span>Price</span>
+                </a>
+            </li> -->
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('web.admin_news') }}">
+                    <i class="bi bi-newspaper"></i>
+                    <span>News</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside><!-- End Sidebar-->
+
+    <main id="main" class="main">
+        {% block admin_content %}{% endblock %}
+    </main><!-- End #main -->
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.querySelector('button').click();
+                });
+            }, 8000); // hide alert in 8 seconds
+        });
+    </script>
+    <!-- <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" -->
+    <!-- integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+        crossorigin="anonymous"></script> -->
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/vendor/chart.js/chart.umd.js"></script>
+    <script src="/static/vendor/tinymce/tinymce.min.js"></script>
+
+    <script src="/static/js/admin/main.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.nz-date').each(function () {
+                var dateText = $(this).text();
+                var formattedDate = `${new Date(dateText).toLocaleDateString()} ${new Date(dateText).toLocaleTimeString()}`;
+                $(this).text(formattedDate);
+            });
+        });
+
+        // $(document).ready(function() {
+        //         var socket = io.connect('http://' + document.domain + ':' + location.port);
+        //         socket.on('connect', function() {
+        //             console.log('Connected to server');
+        //             socket.emit('start_streaming'); // 发送信号开始数据推送
+        //         });
+        //         socket.on('data_update', function(data) {
+        // console.log("typeof",typeof data[0])
+        // console.log("data",data[0])
+        // var msg = data[0]['medicine_name']
+        // var id = data[0]['id']
+        // console.log('Received data id:', id);
+        // console.log('Received data:', msg);
+        // alert(data);
+        // $('#remind').html(`
+        //     <li class="notification-item">
+        //         <i class="bi bi-exclamation-circle text-warning"></i>
+        //         <div>
+        //             <h4>Lorem Ipsum</h4>
+        //             <p>Quae dolorem earum veritatis oditseno</p>
+        //             <p>30 min. ago</p>
+        //         </div>
+        //     </li>
+
+        //     <li>
+        //         <hr class="dropdown-divider">
+        //     </li>
+        //     <li class="dropdown-footer">
+        //         <a href="#">Show all notifications</a>
+        //     </li>
+        // `);
+        //     });
+        // });
+    </script>
+</body>
+
+</html>

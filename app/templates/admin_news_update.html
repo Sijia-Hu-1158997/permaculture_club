@@ -1,0 +1,77 @@
+{% extends 'base_admin.html' %}
+{% block admin_content %}
+
+
+<div class="pagetitle">
+  <h1>Update Location</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('web.admin_home') }}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('web.admin_news') }}">News List</a></li>
+      <li class="breadcrumb-item active">{{news.title}}</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Update News</h5>
+
+
+          <!-- Add User Form -->
+          <form action="{{ url_for('web.update_news', id=news.id)}}" method="POST">
+
+            <div class="row mb-3">
+              <label for="title" class="col-md-4 col-lg-3 col-form-label">Title</label>
+              <div class="col-md-8 col-lg-9">
+                <input value="{{news.title}}" name="title" type="text" class="form-control" id="title"
+                     required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="status" class="col-md-4 col-lg-3 col-form-label">Status</label>
+              <div class="col-md-8 col-lg-9">
+                <select class="form-control" name="status" id="status" required>
+                  <option value="draft" {% if news.status=='draft' %}selected{% endif %}>Draft</option>
+                  <option value="published" {% if news.status=='published' %}selected{% endif %}>Published</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="content" class="col-md-4 col-lg-3 col-form-label">Content</label>
+              <div class="col-md-8 col-lg-9">
+                <input value="{{news.content}}" name="content" type="text" class="form-control" id="content"
+                 required>
+              </div>
+            </div>
+
+
+
+            <div class="text-center">
+              <a href="{{ url_for('web.admin_news') }}" class="btn btn-primary">Back</a>
+              <button type="submit" class="btn btn-primary">Update News</button>
+            </div>
+          </form><!-- End Profile Edit Form -->
+
+        </div>
+
+
+
+      </div><!-- End Bordered Tabs -->
+
+    </div>
+  </div>
+
+  </div>
+  </div>
+</section>
+
+
+{% endblock %}

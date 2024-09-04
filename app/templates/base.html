@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Permaculture Club</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png" />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="/static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="/static/css/main.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+</head>
+
+<body>
+    <section class="position-fixed top-6 end-1 z-index-2 d-flex justify-content-center">
+        <!--handle messages-->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible text-{{ category }}" role="alert">
+            <span class="text-sm">{{ message }}</span>
+            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </section>
+    <section id="topbar" class="topbar d-flex align-items-center">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="contact-info d-flex align-items-center">
+                <i class="d-flex align-items-center">Group I: HexaDec</i>
+            </div>
+        </div>
+    </section>
+    <header id="header" class="header d-flex align-items-center">
+
+        <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+            <a href="{{ url_for('web.home') }}" class="logo d-flex align-items-center">
+                <h1>Permaculture<span>.</span></h1>
+            </a>
+            <!-- auth -->
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a href="{{ url_for('web.home') }}">Home</a></li>
+                    <li><a href="{{ url_for('web.workshop') }}">Workshop</a></li>
+                    <li><a href="{{ url_for('web.lesson') }}">One-on-one Lesson</a></li>
+                    {% if me.id %} 
+                    <li class="dropdown"><a href="{{ url_for('web.profile') }}"><span>Welcome {{me.username}}</span> <i
+                                class="bi bi-chevron-down dropdown-indicator"></i></a>
+                        <ul>
+                            {% if me.role == 'member' %}
+                            <li><a href="{{url_for('web.profile')}}">Profile</a></li>
+                            <li><a href="{{url_for('web.profile')}}">Update Password</a></li>
+                            <li><a href="{{url_for('web.membership')}} ">Subscription</a></li>
+                            <li><a href="{{url_for('web.booking_list')}}">My Courses</a></li>
+                            <li><a href="{{url_for('web.add_feedback')}}">Feedback</a></li>
+                            {% endif %}
+                            
+                            {% if me.role == 'manager' %}
+                                <li><a href="{{url_for('web.admin_home')}}">Dashboard</a></li>
+                                <li><a href="{{url_for('web.admin_profile')}}">Profile & Password</a></li>
+                            {% endif %}
+
+                            {% if me.role == 'instructor' %}
+                                 <li><a href="{{url_for('web.admin_home')}}">Dashboard</a></li>
+                                <li><a href="{{url_for('web.admin_profile')}}">Profile & Password</a></li>
+                                <li><a href="{{url_for('web.instructor_freetime')}}">Manage Free Time</a></li>
+                                <li><a href="{{url_for('web.booking_list')}}">See Courses & Record Attendance</a></li>
+                                <li><a href="{{url_for('web.instructor_course')}}">Instructor Course</a></li>
+                            {% endif %}
+
+                            <li><a href="{{url_for('web.view_news')}}">News</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{url_for('web.logout')}}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('web.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('web.register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+            <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+
+        </div>
+    </header>
+
+    <main id="main">
+        {% block content %}{% endblock %}
+    </main>
+
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-5 col-md-12 footer-info">
+                    <a href="" class="logo d-flex align-items-center">
+                        <span>Permaculture</span>
+                    </a>
+                    <p>Living in Harmony with the Earth.</p>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+    <!-- End Footer -->
+
+    <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <div id="preloader"></div>
+
+
+    {% block extrajs %}{% endblock %}
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.querySelector('button').click();
+                });
+            }, 8000); // hide alert in 8 seconds
+        });
+    </script>
+</body>
+<!-- Vendor JS Files -->
+<!-- <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" -->
+<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/vendor/aos/aos.js"></script>
+<script src="/static/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="/static/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="/static/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="/static/js/main.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.nz-date').each(function () {
+            var dateText = $(this).text();
+            var formattedDate = `${new Date(dateText).toLocaleDateString()} ${new Date(dateText).toLocaleTimeString()}`;;
+            $(this).text(formattedDate);
+        });
+    });
+
+    // var socket = io.connect('http://' + document.domain + ':' + location.port); -->
+    //socket.on('connect', function () { -->
+    // console.log('Connected to server');
+    // socket.emit('start_streaming');
+    //});
+    // socket.on('data_update', function (data) {
+    // alert(data);
+    //});
+    //});
+
+</script>
+
+</html>
